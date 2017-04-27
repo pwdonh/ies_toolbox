@@ -1,0 +1,17 @@
+*.mat
+*.html
+*.png
+*.jpg
+*.pdf
+*.doc
+*.docx
+*.eps
+*.tif
+*.aux
+*.log
+*.nav
+*.out
+*.gz
+*.toc
+*.svg
+*.m~
