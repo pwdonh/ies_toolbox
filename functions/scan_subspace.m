@@ -32,12 +32,12 @@ if nIter>1
         % Project away subspace and leadfields
         Us = P*Us;
         if ~isOutOrient
-            parfor iDip=1:nDip
+            for iDip=1:nDip
                 G(:,:,iDip) = P*G(:,:,iDip);
                 sc(iDip,iIter) = subcorr(G(:,:,iDip), Us, 1);
             end
         else
-            parfor iDip = 1:nDip
+            for iDip = 1:nDip
                 G(:,:,iDip) = P*G(:,:,iDip);
                 [sc(iDip,iIter), x_all(:,iDip,iIter), ~] = subcorr(G(:,:,iDip), Us, 1);
             end
