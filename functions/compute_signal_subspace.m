@@ -139,12 +139,6 @@ for iOutput = 1:Options.isOutF+1 % for filters and patterns
     DataMat.DataType        = 'recordings';
     DataMat.Device          = 'subspace';
     DataMat.SNR             = SNR;
-    if Options.isStat
-        DataMat.pval        = pval;
-        if exist('ci_spec','var')
-            DataMat.ci      = ci_spec;
-        end
-    end
     DataMat.C1              = C1;
     DataMat.C2              = C2;
     if Options.isSaveCov
