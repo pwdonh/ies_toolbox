@@ -83,25 +83,6 @@ pval(pval>1) = 1;
 
 end
 
-% if ~para.isVector
-%     
-% else
-% 
-% end
-% 
-% for iDim = 1:para.nDim
-%     n_plus(iDim,:) = sum(bsxfun(@lt, stat_obs, stat_plus(iDim,:)'),1);
-%     n_minus(iDim,:) = sum(bsxfun(@gt, stat_obs, stat_minus(iDim,:)'),1);
-%     pval_plus_vol(iDim,:) = sum(n_plus(1:iDim,:),1)./nPerm/iDim;
-%     pval_minus_vol(iDim,:) = sum(n_minus(1:iDim,:),1)./nPerm/iDim;
-% end
-% norm(n_plus./nPerm)
-
-
-
-
-
-
 
 
 
