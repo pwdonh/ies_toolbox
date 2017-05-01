@@ -1,4 +1,6 @@
-## Single-subject level
+## Pipeline for detecting induced responses
+
+### Single-subject level
 
 Add data files in the Process1 tab, use the pipeline editor:
 
@@ -16,4 +18,4 @@ View scanning results:
 
 ![pipeline_induced_result_2](../../imgs/pipeline_induced_result_2.png)
 
-## Group level
+### Group level
