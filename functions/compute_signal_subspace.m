@@ -15,12 +15,12 @@ end
 % Check which analysis type to use
 if isempty(FilesB)
     Files = FilesA;
-    if isempty(Options.Baseline)
-        pipeline = 'pca';
-    elseif ~isempty(Options.Baseline)&&isempty(Options.NoiseBand)
+    if ~isempty(Options.Baseline)&&isempty(Options.NoiseBand)
         pipeline = 'stim_base';
-    elseif ~isempty(Options.NoiseBand)
+    elseif ~isempty(Options.NoiseBand)&&isempty(Options.Baseline)
         pipeline = 'freq1_freq2';
+    elseif isempty(Options.Baseline)
+        pipeline = 'pca';        
     end
 else
     [~, MatName] = in_bst(FilesB{1});
