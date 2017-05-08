@@ -1,4 +1,4 @@
-function [SNR, Results, C1, C2, C1_all, C2_all, Pow_all, Pow_all_unreg, C_orig, y_all] = ...
+function [SNR, Results, C1, C2, C1_all, C2_all, Pow_all, Pow_all_unreg] = ...
     compute_signal_subspace_core(X1, X2, y, pipeline, Options)  
 
 % Compute covariance matrices
@@ -13,22 +13,14 @@ elseif strcmp(pipeline, 'coh_ref')
     % cross- and auto-correlation functions
     error('Not implemented.')
     [C1, C2, C1_all, C2_all] = compute_auto_cross_covariance(X1, y, Options.PassBand, Options.fs);
-elseif strcmp(pipeline, 'coh_ref_am')
-    [C1_all, C2_all, y_all, C_orig] = compute_cov_am(X1, y, 1, Options.nBins);
-    C1 = mean(C1_all,3);
-    C2 = mean(C2_all,3);
-elseif strcmp(pipeline, 'aec')
-    [C1_all, C2_all, y_all, C_orig] = compute_cov_am(X1, y, Options.TypeAM, Options.nBins);
+elseif strcmp(pipeline, 'aec')||strcmp(pipeline, 'coh_ref_am')
+    [~, C2_all] = compute_covariance(X1, 1);
+    C1_all = compute_covariance_am(C2_all, y);
     C1 = mean(C1_all,3);
     C2 = mean(C2_all,3);
 else % Condition 1 over 2, Frequency band 1 over 2, etc.
     [C1, C1_all] = compute_covariance(X1, 1);
     [C2, C2_all] = compute_covariance(X2, 1);
-end
-
-if ~strcmp(pipeline, 'coh_ref_am')&&~strcmp(pipeline, 'aec')
-    C_orig = [];
-    y_all = [];
 end
 
 % Project out given topography
@@ -54,6 +46,9 @@ for iSegment = 1:size(C1_all,3)
     inputs2{iSegment} = C2_all(:,:,iSegment);
 end  
 [SNR, Results{2}, Results{1}] = geneig_func({inputs1, inputs2}, Options);
+if strcmp(pipeline, 'aec')||strcmp(pipeline, 'coh_ref_am')
+    SNR = compute_correlation_from_cov(C1_all, C2_all, Results{2});
+end
 nTrial = size(C1_all,3);
 for iTrial = 1:nTrial
     Pow_all(:,iTrial,1) = diag(Results{2}'*C1_all(:,:,iTrial)*Results{2});

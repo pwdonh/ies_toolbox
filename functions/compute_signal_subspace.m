@@ -92,9 +92,11 @@ switch pipeline
         [X1, iGoodChan, fs, Options.indSegment] = get_data(Files, iGoodChan, Options.Stimulus, Options.PassBand, Options.WindowFcn, Options.WinLength, Options.WinOverlap);
         % Load reference signals
         X2 = [];
-        y = get_data(FilesB, Options.iRow, Options.Stimulus, Options.PassBand, Options.WindowFcn, Options.WinLength, Options.WinOverlap);
-        for iSegment = 1:size(y,3)
-            y(1,:,iSegment) = abs(hilbert(y(1,:,iSegment)')');
+        y_tmp = get_data(FilesB, Options.iRow, Options.Stimulus, Options.PassBand, Options.WindowFcn, Options.WinLength, Options.WinOverlap);
+        denom = size(y_tmp,2)-1/size(y_tmp,3);
+        for iSegment = 1:size(y_tmp,3)
+            ts = y_tmp(1,:,iSegment);
+            y(1,1,iSegment) = (ts*ts')/denom;
         end
     case 'coh_ref_am'
         % Load data (+ apply windowing and filtering)
@@ -122,7 +124,7 @@ fprintf('Ignoring %d bad channels.\n', numel(iChan)-numel(iGoodChan));
 
 %% === COMPUTE
 
-[SNR, Results, C1, C2, C1_all, C2_all, Pow_all, Pow_all_unreg, C_orig, y_all] = ...
+[SNR, Results, C1, C2, C1_all, C2_all, Pow_all, Pow_all_unreg] = ...
     compute_signal_subspace_core(X1, X2, y, pipeline, Options);
 
 %% === SAVE RESULTS
