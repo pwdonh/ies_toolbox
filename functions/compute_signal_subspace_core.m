@@ -48,6 +48,9 @@ end
 [SNR, Results{2}, Results{1}] = geneig_func({inputs1, inputs2}, Options);
 if strcmp(pipeline, 'aec')||strcmp(pipeline, 'coh_ref_am')
     SNR = compute_correlation_from_cov(C1_all, C2_all, Results{2});
+    [SNR,iSNR]=sort(SNR,2,'descend');
+    Results{1} = Results{1}(:,iSNR);
+    Results{2} = Results{2}(:,iSNR);
 end
 nTrial = size(C1_all,3);
 for iTrial = 1:nTrial
