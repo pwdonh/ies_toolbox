@@ -117,31 +117,28 @@ NoiseCov = in_bst(sStudy.NoiseCov.FileName);
 if ~Options.islast
     if Options.dimselect==1
         nDim = Options.nDim;
-        dim_index = 1:nDim;
     elseif Options.dimselect==2
         nDim = find(diff(cumsum(sMat.pval'<Options.p_crit))==0,1);
         if (nDim==1)&&(sMat.pval(1)>Options.p_crit)
             nDim = 0;
         end
-        dim_index = 1:nDim;
     elseif Options.dimselect==3
-        dim_index = sMat.SNR>Options.snr_crit;
+        nDim = sum(sMat.SNR>Options.snr_crit);
     end
+    Us = sMat.F(iGoodChan,1:nDim);
 else
     if Options.dimselect==1
         nDim = Options.nDim;
-        dim_index = size(sMat.F,2)-nDim+1:size(sMat.F,2);
     elseif Options.dimselect==2
         nDim = find(diff(cumsum(flip(sMat.pval)'<Options.p_crit))==0,1);
         if (nDim==1)&&(sMat.pval(1)>Options.p_crit)
             nDim = 0;
         end
-        dim_index = size(sMat.F,2)-nDim+1:size(sMat.F,2);
     elseif Options.dimselect==3
-        dim_index = sMat.SNR<Options.snr_crit;
+        nDim = sum(sMat.SNR<Options.snr_crit);
     end
+    Us = sMat.F(iGoodChan,end-nDim+1:end);
 end
-Us = sMat.F(iGoodChan,dim_index);
 
 % Load leadfield
 G = GainMat.Gain(iGoodChan,:);
