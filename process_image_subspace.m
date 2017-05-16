@@ -67,9 +67,18 @@ Kr = reshape(K', size(K,2), 3, size(K,1)/3);
 for iSource = 1:size(Kr,3)
     C1 = Kr(:,:,iSource)'*sMat.C1*Kr(:,:,iSource);
     C2 = Kr(:,:,iSource)'*sMat.C2*Kr(:,:,iSource);
-    geneigs = geneig_func({{C1},{C2}});
-    [~,ii]=max(abs(geneigs));
-    y(iSource,1) = geneigs(ii);
+    if strcmp(sMat.Pipeline,'aec')
+        [U,S]=svd(C2);
+        [~,ii]=max(abs(diag(S)));
+        Ko(iSource,:) = Kr(:,:,iSource)*U(:,ii);
+    else
+        geneigs = geneig_func({{C1},{C2}});
+        [~,ii]=max(abs(geneigs));
+        y(iSource,1) = geneigs(ii);
+    end
+end
+if strcmp(sMat.Pipeline,'aec')
+    y = compute_correlation_from_cov(sMat.C1, sMat.C2_all, Ko')';
 end
 
 % Prepare result structure
