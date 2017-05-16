@@ -64,7 +64,7 @@ sProcessAvg = process_average('GetDescription');
 sProcessAvg.options.avgtype.Value = 1; % Everything
 AvgFile = process_average('Run', sProcessAvg, sInput);
 
-sProcessScan = process_scan_subspace_fast('GetDescription');
+sProcessScan = process_scan_subspace('GetDescription');
 sProcessScan.options.rsspace.Value = 1; % Set dimensions manually
 sProcessScan.options.niter.Value{1} = nIter;
 sProcessScan.options.issave.Value = 0;
@@ -82,13 +82,8 @@ for iFile = 1:numel(sInput)
     else
         sProcessScan.options.order.Value = 2; % first
     end
-    if sMat.Options.isNoiseCov
-        sProcessScan.options.whiten.Value = 2; % noise covariance
-    else
-        sProcessScan.options.whiten.Value = 1; % noise subspace
-    end
     sInputScan = bst_process('GetInputStruct', sMat.Options.SubspaceFile);
-    sMatReversed = process_scan_subspace_fast('Run', sProcessScan, sInputScan);
+    sMatReversed = process_scan_subspace('Run', sProcessScan, sInputScan);
     
     % save subcorr maps
     scMaps{1}{iFile} = sMat.ImageGridAmp(:,nIter);
