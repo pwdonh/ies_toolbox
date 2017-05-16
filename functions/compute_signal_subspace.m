@@ -144,12 +144,12 @@ for iOutput = 1:Options.isOutF+1 % for filters and patterns
     DataMat.C1              = C1;
     DataMat.C2              = C2;
     if Options.isSaveCov
-        if strcmp(pipeline, 'coh_ref_am')||strcmp(pipeline, 'aec')
-            DataMat.C_orig  = C_orig;
-            DataMat.y_all   = y_all;
-        else
+        if ~strcmp(pipeline,'aec')
             DataMat.C1_all      = C1_all;
             DataMat.C2_all      = C2_all;
+        else
+            DataMat.C2_all      = C2_all;
+            DataMat.y_all   = y;
         end
     end
     DataMat.Pow_all     = Pow_all;
