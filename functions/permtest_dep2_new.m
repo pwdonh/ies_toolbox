@@ -42,7 +42,12 @@ end
 if para.verbose
     fprintf('Permutation     0 of %5d\n', nPerm);
 end
-stat_perm = zeros(size(stat_obs,1), nPerm);
+if ~para.isMaximum
+    stat_perm = zeros(size(stat_obs,1), nPerm);
+else
+    maxstat = zeros(1, nPerm);
+    minstat = zeros(1, nPerm);
+end
 for iPerm = 1:nPerm
     perm_sample = {};
     if para.verbose
@@ -55,7 +60,13 @@ for iPerm = 1:nPerm
         perm_sample{2}{iInst} = obs_sample{~indSample(iInst)+1}{iInst};
     end
     % compute statistic
-    stat_perm(:,iPerm) = feval(para.func, perm_sample, para);
+    stat_perm_tmp = feval(para.func, perm_sample, para);
+    if ~para.isMaximum
+        stat_perm(:,iPerm) = stat_perm_tmp;
+    else
+        maxstat(iPerm) = max(stat_perm_tmp);
+        minstat(iPerm) = min(stat_perm_tmp);
+    end
 end
 
 %% compute p-values
@@ -70,16 +81,30 @@ if ~para.isMaximum % treat every dimension separately
     pval(~isPos) = ((n(~isPos)+1)./(nPerm+1));
     pval(isPos) = ((nPerm-n(isPos)+1)./(nPerm+1));
 else % use maximum statistic
-    pval = ones(1,size(stat_obs,1));
-    maxstat = max(stat_perm);
-    n = sum(bsxfun(@gt, stat_obs', repmat(maxstat,size(stat_obs,1),1)'));
-    pval(isPos) = ((nPerm-n(isPos)+1)./(nPerm+1));
-    minstat = min(stat_perm);
-    n = sum(bsxfun(@lt, stat_obs', repmat(minstat,size(stat_obs,1),1)'));
-    pval(~isPos) = ((nPerm-n(~isPos)+1)./(nPerm+1));
+%     pval = ones(1,size(stat_obs,1));
+%     maxstat = max(stat_perm);
+%     n = sum(bsxfun(@gt, stat_obs', repmat(maxstat,size(stat_obs,1),1)'));
+%     pval(isPos) = ((nPerm-n(isPos)+1)./(nPerm+1));
+%     minstat = min(stat_perm);
+%     n = sum(bsxfun(@lt, stat_obs', repmat(minstat,size(stat_obs,1),1)'));
+%     pval(~isPos) = ((nPerm-n(~isPos)+1)./(nPerm+1));
+    pval_pos = ones(1,size(stat_obs,1));
+    pval_neg = ones(1,size(stat_obs,1));
+    for iSource = 1:size(stat_obs,1)
+        n = sum(stat_obs(iSource)>maxstat);
+        pval_pos(iSource) = ((nPerm-n+1)./(nPerm+1));
+        n = sum(stat_obs(iSource)<minstat);
+        pval_neg(iSource) = ((nPerm-n+1)./(nPerm+1));                
+    end
+    pval = pval_pos;
+    pval(~isPos) = pval_neg(~isPos);
 end
 pval = pval*2;
 pval(pval>1) = 1;
+
+if para.isMaximum
+    stat_perm = maxstat;
+end
 
 end
 
