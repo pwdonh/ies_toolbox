@@ -1,1 +1,3 @@
-Under construction..
+Manuscript in submission, use at your own risk...
+
+Copy all files in your $HOME/.brainstorm/process directory. Example use cases are given in [./demos/](demos)
