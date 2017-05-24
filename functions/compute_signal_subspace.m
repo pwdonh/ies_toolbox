@@ -100,10 +100,14 @@ switch pipeline
         end
     case 'coh_ref_am'
         % Load data (+ apply windowing and filtering)
-        [X1, iGoodChan, fs, Options.indSegment] = get_data(Files, iGoodChan, Options.Stimulus, Options.PassBandAM, Options.WindowFcn, Options.WinLength, Options.WinOverlap);
+        [X1, iGoodChan, fs, Options.indSegment] = get_data(Files, iGoodChan, Options.Stimulus, Options.PassBand, Options.WindowFcn, Options.WinLength, Options.WinOverlap);
         X2 = [];
         % Load reference signals
-        y = get_data(FilesB, Options.iRow, Options.Stimulus, Options.PassBand, Options.WindowFcn, Options.WinLength, Options.WinOverlap);
+        y_tmp = get_data(FilesB, Options.iRow, Options.Stimulus, [], Options.WindowFcn, Options.WinLength, Options.WinOverlap);
+        for iSegment = 1:size(y_tmp,3)
+            ts = y_tmp(1,:,iSegment);
+            y(1,1,iSegment) = mean(ts);
+        end        
     case 'pca'
         % Load data (+ apply windowing and filtering)
         [X1, iGoodChan, fs, Options.indSegment] = get_data(Files, iGoodChan, Options.Stimulus, Options.PassBand, Options.WindowFcn, Options.WinLength, Options.WinOverlap);
@@ -144,7 +148,7 @@ for iOutput = 1:Options.isOutF+1 % for filters and patterns
     DataMat.C1              = C1;
     DataMat.C2              = C2;
     if Options.isSaveCov
-        if ~strcmp(pipeline,'aec')
+        if ~strcmp(pipeline,'aec')||~strcmp(pipeline,'coh_ref_am')
             DataMat.C1_all      = C1_all;
             DataMat.C2_all      = C2_all;
         else

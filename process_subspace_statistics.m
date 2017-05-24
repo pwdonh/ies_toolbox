@@ -270,15 +270,14 @@ end
 
 % Compute p-values
 for iFile = 1:nFile
-    pval = (sum(bsxfun(@lt, SNR_obs{iFile}, snr_max_shuff(iFile,:)),2)+1)/(nShuff+1);
+    pval = (sum(bsxfun(@lt, SNR_obs{iFile}', snr_max_shuff(iFile,:)),2)+1)/(nShuff+1);
     if strcmp(pipeline,'aec')||strcmp(pipeline,'coh_ref_am')
-        pval_minus = (sum(bsxfun(@gt, SNR_obs{iFile}, snr_min_shuff(iFile,:)),2)+1)/(nShuff+1);
+        pval_minus = (sum(bsxfun(@gt, SNR_obs{iFile}', snr_min_shuff(iFile,:)),2)+1)/(nShuff+1);
         pval(SNR_obs{1}<0) = pval_minus(SNR_obs{1}<0);
     end
     fprintf('File %d: %d significant dimensions out of %d\n', iFile, ...
         sum(pval<.05), length(pval));
     Results(iFile).pval_shuff = pval;
-    Results(iFile).isKeepTrials = isKeepTrials;
 end
 
 end
