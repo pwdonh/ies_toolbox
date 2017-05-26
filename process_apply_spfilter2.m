@@ -63,7 +63,11 @@ function sProcess = GetDescription()
     % === Comment
     sProcess.options.comment.Comment = 'Comment:';
     sProcess.options.comment.Type    = 'text';
-    sProcess.options.comment.Value   = '';        
+    sProcess.options.comment.Value   = '';    
+    % Normalize
+    sProcess.options.isnoisenorm.Comment = 'Normalize values using noise statistics';
+    sProcess.options.isnoisenorm.Type    = 'checkbox';
+    sProcess.options.isnoisenorm.Value   = 0;    
 end
 
 
@@ -80,14 +84,19 @@ Options.nComp = sProcess.options.ncomp.Value{1};
 Options.Comment = sProcess.options.comment.Value;
 Options.order = sProcess.options.order.Value;
 Options.matrix = sProcess.options.matrix.Value;
+isNoiseNorm = sProcess.options.isnoisenorm.Value;
 
 if isempty(Options.Comment)
     Options.Comment = 'Spatial filter';
 end
 
-% The noise covariance matrix is used to normalize the signal power
-sStudy = bst_get('Study', sInputsA.iStudy);
-NoiseFile = sStudy.NoiseCov.FileName;
+if isNoiseNorm
+    % The noise covariance matrix is used to normalize the signal power
+    sStudy = bst_get('Study', sInputsA.iStudy);
+    NoiseFile = sStudy.NoiseCov.FileName;
+else
+    NoiseFile = [];
+end
 
 OutputFiles = apply_spatial_filter(sInputsA.FileName, ...
     {sInputsB.FileName}, NoiseFile, Options);
@@ -159,9 +168,11 @@ W = (Proj'*pinv(Proj*P)')';
 
 %% Load noise covariance
 
-NoiseMat = load(file_fullpath(NoiseFile));
-Nm = NoiseMat.NoiseCov(iChanFilt,iChanFilt);
-noisenorm = sqrt(diag(W*Nm*W'));
+if ~isempty(NoiseFile)
+    NoiseMat = load(file_fullpath(NoiseFile));
+    Nm = NoiseMat.NoiseCov(iChanFilt,iChanFilt);
+    noisenorm = sqrt(diag(W*Nm*W'));
+end
 
 %% Apply to data files
 
@@ -169,8 +180,11 @@ for iFile = 1:numel(DataFiles)
     DataMat = in_bst_data(DataFiles{iFile});
     Events{iFile} = DataMat.Events;
     X = DataMat.F(iChanDat,:);
-%     Y(:,:,iFile) = bsxfun(@rdivide, W * X, noisenorm);
-    Y(:,:,iFile) = W * X;
+    if ~isempty(NoiseFile)
+        Y(:,:,iFile) = bsxfun(@rdivide, W * X, noisenorm);
+    else
+        Y(:,:,iFile) = W * X;
+    end
 end
 
 %% Save resulting matrix files
