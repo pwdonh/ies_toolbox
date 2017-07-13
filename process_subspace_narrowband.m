@@ -33,7 +33,7 @@ function sProcess = GetDescription() %#ok<*DEFNU>
     sProcess.Comment     = 'Compute Signal Subspace: Narrowband';
     sProcess.FileTag     = '| subsp';
     sProcess.Category    = 'Custom';
-    sProcess.SubGroup    = 'Sources';
+    sProcess.SubGroup    = 'iES plugin';
     sProcess.Index       = 112;
     % Definition of the input accepted by this process
     sProcess.InputTypes  = {'data'};

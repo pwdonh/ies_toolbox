@@ -33,7 +33,7 @@ function sProcess = GetDescription() %#ok<DEFNU>
     sProcess.Comment     = 'Compute Signal Subspace: Amplitude Modulation';
     sProcess.FileTag     = '';
     sProcess.Category    = 'Custom';
-    sProcess.SubGroup    = 'Connectivity';
+    sProcess.SubGroup    = 'iES plugin';
     sProcess.Index       = 651;
     sProcess.Description = '';
     % Definition of the input accepted by this process

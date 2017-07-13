@@ -34,7 +34,7 @@ function sProcess = GetDescription()
 sProcess.Comment     = 'Scan signal subspace';
 sProcess.FileTag     = '';
 sProcess.Category    = 'File';
-sProcess.SubGroup    = 'Sources';
+sProcess.SubGroup    = 'iES plugin';
 sProcess.Index       = 113;
 % Definition of the input accepted by this process
 sProcess.InputTypes  = {'data'};

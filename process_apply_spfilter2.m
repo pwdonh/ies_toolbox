@@ -34,7 +34,7 @@ function sProcess = GetDescription()
     sProcess.Comment     = 'Apply spatial filter';
     sProcess.FileTag     = '';
     sProcess.Category    = 'Custom';
-    sProcess.SubGroup    = 'Sources';
+    sProcess.SubGroup    = 'iES plugin';
     sProcess.Index       = 302;
     % Definition of the input accepted by this process
     sProcess.InputTypes  = {'data'};
