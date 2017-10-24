@@ -112,7 +112,11 @@ function OutputFiles = Run(sProcess, sInputs)
     sFiles = {sInputs.FileName};
     Options.PassBand  = sProcess.options.bandpass.Value{1};
     Options.NoiseBand  = [];
-    Options.Stimulus  = sProcess.options.timewindow.Value;
+    if iscell(sProcess.options.timewindow.Value)
+        Options.Stimulus  = sProcess.options.timewindow.Value{1};
+    else
+        Options.Stimulus  = sProcess.options.timewindow.Value;
+    end
     Options.Baseline = [];
 	isSplit = sProcess.options.split.Value;
     if isSplit
