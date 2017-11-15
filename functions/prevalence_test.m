@@ -1,4 +1,4 @@
-function [p_maj, gamma_0, p_kk_gamma, gammavals, p_k_gamma] = prevalence_test(observed, alpha_ind, beta_ind, alpha_group)
+function [p_maj, gamma_0, p_kk_gamma, gammavals, p_k_gamma] = prevalence_test(observed, alpha_ind, beta_ind, alpha_group, gamma_0)
 
 % [p_maj, gamma_0, p_kk_gamma, gammavals, p_k_gamma] = prevalence_test(input, alpha_ind, beta_ind, alpha_group)
 %
@@ -33,13 +33,20 @@ end
 if nargin<4
     alpha_group = .05;
 end
-
-dgamma = .001;
+if nargin<5 % majority hypothesis
+    gamma_0 = .5;
+end
 
 n = size(pvals,1);
 k_obs = sum(pvals<alpha_ind);
-gammavals = 0:dgamma:1;
 kvals = 0:n;
+
+if nargout>1
+    dgamma = .001;
+    gammavals = 0:dgamma:1;
+else
+    gammavals = gamma_0;
+end
 
 clear p_k_gamma tmp
 for iGam = 1:numel(gammavals)
@@ -54,13 +61,15 @@ for iGam = 1:numel(gammavals)
 end
 
 iK = find(kvals==k_obs);
-p_maj = p_kk_gamma(gammavals==.5,iK);
+p_maj = p_kk_gamma(gammavals==gamma_0,iK);
 
-index = sum(p_kk_gamma(:,iK) < alpha_group);
-if index~=0
-    gamma_0 = gammavals(index);
-else
-    gamma_0 = 0;
+if nargout>1
+    index = sum(p_kk_gamma(:,iK) < alpha_group);
+    if index~=0
+        gamma_0 = gammavals(index);
+    else
+        gamma_0 = 0;
+    end
 end
 
 end
