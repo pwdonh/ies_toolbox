@@ -163,8 +163,8 @@ for iOutput = 1:Options.isOutF+1 % for filters and patterns
     DataMat.Options         = Options;
     DataMat.FilesA          = FilesA;
     DataMat.FilesB          = FilesB;
-    DataMat.ChannelFlag     = ones(size(DataMat.ChannelFlag))*-1;
-    DataMat.ChannelFlag(iGoodChan) = 1;
+%     DataMat.ChannelFlag     = ones(size(DataMat.ChannelFlag))*-1;
+%     DataMat.ChannelFlag(iGoodChan) = 1;
     % Save in database
     if Options.isSave
         OutputFile = bst_process('GetNewFilename', bst_fileparts(Files{1}), 'data_subspace');
