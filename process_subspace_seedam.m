@@ -179,10 +179,12 @@ function OutputFiles = Run(sProcess, sInputs)
     end
     
     % Delete reference files
-    sInputsRef = bst_process('GetInputStruct', sFilesRef);
-    sProcessDelete = process_delete('GetDescription');
-    sProcess.options = struct_copy_fields(sProcess.options, sProcessDelete.options, 0);
-    tmp = process_delete('Run', sProcess, sInputsRef);
+    if ~Options.isSaveCov
+        sInputsRef = bst_process('GetInputStruct', sFilesRef);
+        sProcessDelete = process_delete('GetDescription');
+        sProcess.options = struct_copy_fields(sProcess.options, sProcessDelete.options, 0);
+        tmp = process_delete('Run', sProcess, sInputsRef);
+    end
         
 end
 
