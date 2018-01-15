@@ -72,9 +72,10 @@ for iSource = 1:size(Kr,3)
         [~,ii]=max(abs(diag(S)));
         Ko(iSource,:) = Kr(:,:,iSource)*U(:,ii);
     else
-        geneigs = geneig_func({{C1},{C2}});
-        [~,ii]=max(abs(geneigs));
-        y(iSource,1) = geneigs(ii);
+%         geneigs = geneig_func({{C1},{C2}});
+%         [~,ii]=max(abs(geneigs));
+%         y(iSource,1) = geneigs(ii);
+        y(iSource,1) = max(svd(C1))/max(svd(C2));
     end
 end
 if strcmp(sMat.Pipeline,'aec')
