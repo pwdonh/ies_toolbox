@@ -181,9 +181,20 @@ for iFile = 1:numel(DataFiles)
     Events{iFile} = DataMat.Events;
     X = DataMat.F(iChanDat,:);
     if ~isempty(NoiseFile)
-        Y(:,:,iFile) = bsxfun(@rdivide, W * X, noisenorm);
+        if Options.matrix==1
+            Y(:,:,iFile) = bsxfun(@rdivide, W * X, noisenorm);
+        else
+            Y{iFile} = bsxfun(@rdivide, W * X, noisenorm);
+            t{iFile} = DataMat.Time;
+        end
     else
-        Y(:,:,iFile) = W * X;
+        Y{iFile} = W * X;
+        if Options.matrix==1
+            Y(:,:,iFile) = W * X;
+        else
+            Y{iFile} = W * X;
+            t{iFile} = DataMat.Time;
+        end        
     end
 end
 
@@ -211,12 +222,12 @@ if Options.matrix==1
 elseif Options.matrix==2
     MatrixMat = db_template('matrixmat');
     MatrixMat.Description = {};
-    MatrixMat.Time = DataMat.Time;
     for iComp = 1:Options.nComp
         MatrixMat.Description{iComp,1} = ['Component ' num2str(iComp)];
     end
     for iFile = 1:numel(DataFiles)
-        MatrixMat.Value = Y(:,:,iFile);
+        MatrixMat.Value = Y{iFile};
+        MatrixMat.Time = t{iFile};
         MatrixMat.Comment = [Options.Comment ' epoch (#' num2str(iFile) ')'];
         MatrixMat.Events = Events{iFile};
         % Get filename
