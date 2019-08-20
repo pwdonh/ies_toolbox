@@ -4,4 +4,4 @@ The method implemented in this toolbox is described in the following paper:
 
 Copy all files in your $HOME/.brainstorm/process directory and add ./functions/ to your Matlab path. Documentation for different use cases can be found in [./demos/](demos)
 
-The results in the paper can be reproduced by downloading the data from [here](https://box.bic.mni.mcgill.ca/s/kFSZf8Vj6beU6pa), and running the code in [./demos/paper_results/](demos/paper_results)
+The results in the paper can be reproduced by downloading the data from [here](https://box.bic.mni.mcgill.ca/s/kFSZf8Vj6beU6pa) (please contact me should the link become broken), and running the code in [./demos/paper_results/](demos/paper_results)
